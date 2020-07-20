@@ -1,0 +1,35 @@
+CREATE TABLE IF NOT EXISTS employee(uid int, firstName varchar(50), lastName varchar(80), birthDay date, dateChange date, description varchar(255), PRIMARY KEY(uid)) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS upload LIKE employee;
+CREATE TABLE IF NOT EXISTS upload(uid int, firstName varchar(50), lastName varchar(80), birthDay date, dateChange date, description varchar(255) PRIMARY KEY(uid)) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ 
+INSERT INTO employee
+VALUES (1, 'Dima', 'Kuznyetsov','1985-12-14','2010-09-07',''),
+       (2, 'Dima32', 'Kuznyetsovw',NULL,NULL,''),
+       (4, 'Kostia', 'Krasavets','2002-02-28','2010-09-11',''),
+       (5, 'Madam', 'Kutepova','1973-05-29','2010-08-15','');
+
+INSERT INTO upload
+VALUES (1, 'Dima', 'Kuznyetsov','1985-12-14','2010-09-09',''),
+       (3, 'Dima1', 'Kuznyetsov321',NULL,NULL,''),
+       (4, 'Kostia', 'Krasavets','2002-02-28','2010-09-11',''),
+       (5, 'Madam', 'Kutepova','1973-05-29','2010-08-15','dropel');
+
+DELETE FROM employee
+WHERE uid NOT IN (SELECT u.uid FROM upload u);
+
+INSERT INTO employee
+SELECT u.* FROM upload u
+LEFT JOIN employee e ON u.uid = e.uid
+WHERE e.uid IS NULL;
+
+UPDATE employee e 
+  INNER JOIN upload u 
+    ON e.uid = u.uid
+SET e.firstName = u.firstName,
+    e.lastName = u.lastName,
+    e.birthDay = u.birthDay,
+    e.dateChange = u.dateChange,
+    e.description = u.description
+WHERE e.dateChange != u.dateChange;
+
+DROP TABLE upload;
