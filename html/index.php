@@ -3,10 +3,12 @@ if(isset($_POST["Import"]))
     {
     // connect to the database
     $db = 'csvdata';
-    $host = '127.0.0.1';
+    $host = null;
+    $port = null;
+    $socket = '/var/lib/mysql/mysql.sock';
     $user = 'web';
     $pass = file_get_contents('/opt/tp.txt') or die("Unable to open file!");
-    $conn = mysqli_connect($host, $user, $pass, $db);
+    $conn = mysqli_connect($host, $user, $pass, $db, $port, $socket);
     $filename=$_FILES["file"]["tmp_name"];
     if($_FILES["file"]["size"] > 0)
     {
