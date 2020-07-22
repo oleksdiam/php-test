@@ -1,14 +1,7 @@
 <?php
+include 'config.php';
 if(isset($_POST["Import"]))
     {
-    // connect to the database
-    $db = 'csvdata';
-    $host = null;
-    $port = null;
-    $socket = '/var/lib/mysql/mysql.sock';
-    $user = 'web';
-    $pass = file_get_contents('/opt/tp.txt') or die("Unable to open file!");
-    $conn = mysqli_connect($host, $user, $pass, $db, $port, $socket);
     $filename=$_FILES["file"]["tmp_name"];
     if($_FILES["file"]["size"] > 0)
     {
@@ -23,6 +16,8 @@ if(isset($_POST["Import"]))
                 )
                 ENGINE=InnoDB
                 DEFAULT CHARSET=utf8";
+        // $conn variable grants access to the established connection
+        // to the MySQL database defined in the "config.php" file
         $result = mysqli_query($conn, $sql);
 
         $file = fopen($filename, "r");
@@ -93,7 +88,6 @@ if(isset($_POST["Import"]))
     $result = mysqli_query($conn, $sql);
 
     $affected = array('added' => $addedRows, 'updated' => $updatedRows, 'deleted' => $deletedRows);
-    // echo json_encode($affected);
     }
 
 ?>
@@ -110,16 +104,13 @@ if(isset($_POST["Import"]))
             <div class="row">
                 <form class="form-horizontal" action="" method="post" name="upload_csv" enctype="multipart/form-data">
                     <fieldset>
-                        <!-- Form Name -->
                         <legend>Upload data from csv file to MySQL DB</legend>
-                        <!-- File Button -->
                         <div class="form-group">
                             <label class="col-md-4 control-label" for="filebutton">Select File</label>
                             <div class="col-md-4">
                                 <input type="file" name="file" id="file" accept=".csv" class="input-large">
                             </div>
                         </div>
-                        <!-- Button -->
                         <div class="form-group">
                             <label class="col-md-4 control-label" for="singlebutton">Import data</label>
                             <div class="col-md-4">
